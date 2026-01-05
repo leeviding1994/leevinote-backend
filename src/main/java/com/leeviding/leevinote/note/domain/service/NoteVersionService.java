@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -36,11 +37,13 @@ public class NoteVersionService {
         }
 
         // 使用原子操作创建新版本
-        Integer maxVersion = noteVersionRepository.getMaxVersionNumberByNoteId(note.getId());
-        Integer newVersion = (maxVersion == null) ? 1 : maxVersion + 1;
-
-        NoteVersion version = NoteVersion.createInitialVersion(note, newVersion, changeDescription);
-        return noteVersionRepository.save(version);
+        return noteVersionRepository.createVersionWithAtomicNumber(
+                note.getId(),
+                note.getTitle(),
+                note.getContent(),
+                changeDescription,
+                LocalDateTime.now()
+        );
     }
 
     /**
@@ -74,6 +77,6 @@ public class NoteVersionService {
         if (!oldNote.getContent().equals(newNote.getContent())) {
             description.append("修改内容; ");
         }
-        return description.length() > 0 ? description.substring(0, description.length() - 2) : "无变更";
+        return !description.isEmpty() ? description.substring(0, description.length() - 2) : "无变更";
     }
 }

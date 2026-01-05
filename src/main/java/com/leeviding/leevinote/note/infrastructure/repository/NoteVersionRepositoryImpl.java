@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,5 +67,13 @@ public class NoteVersionRepositoryImpl implements NoteVersionRepository {
                 .stream()
                 .findFirst()
                 .map(noteVersionMapper::toDomain);
+    }
+
+    @Override
+    public NoteVersion createVersionWithAtomicNumber(NoteId noteId, String title, String content,
+                                                     String changeDescription, LocalDateTime createTime) {
+        NoteVersionEntity entity = jpaNoteVersionRepository.createVersionWithAtomicNumber(
+                noteId.getValue(), title, content, changeDescription, createTime);
+        return noteVersionMapper.toDomain(entity);
     }
 }
