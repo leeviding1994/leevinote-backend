@@ -15,5 +15,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
+jwt:
+  secret: ${JWT_SECRET:fDUajqcNx7xdTRGEuNGcX+ZWyvKh+yX0fUl0QKaG2+A=}  # 建议使用强密钥，可通过UUID生成
+  expiration: 86400000 # token过期时间，单位毫秒（此处为1天）
 

@@ -1,12 +1,13 @@
 package com.leeviding.leevinote.note.web.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class NoteQueryObj {
-    private String title;
-    private Integer page;
-    private Integer size;
+    @Builder.Default
+    private String title = "";
 }
