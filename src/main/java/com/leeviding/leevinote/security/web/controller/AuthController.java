@@ -2,10 +2,12 @@ package com.leeviding.leevinote.security.web.controller;
 
 import com.leeviding.leevinote.infrastructure.web.response.Msg;
 import com.leeviding.leevinote.security.util.JwtTokenUtil;
-import com.leeviding.leevinote.security.web.response.UserAuthDto;
+import com.leeviding.leevinote.security.web.response.request.loginObj;
+import com.leeviding.leevinote.security.web.response.response.UserAuthDto;
 import com.leeviding.leevinote.user.application.UserUseCase;
 import com.leeviding.leevinote.user.domain.model.User;
 import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,14 +36,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
+    public ResponseEntity<?> login(@RequestBody loginObj loginObj) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
+                new UsernamePasswordAuthenticationToken(loginObj.getUsername(), loginObj.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        User user = userUseCase.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userUseCase.findByUsername(loginObj.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
         return ResponseEntity.ok(Msg.success(UserAuthDto.buildUser(user.getId(), user.getUsername(), jwtTokenUtil.generateToken(user.getUsername()))));
     }
 }

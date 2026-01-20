@@ -1,4 +1,4 @@
-package com.leeviding.leevinote.security.web.response;
+package com.leeviding.leevinote.security.web.response.response;
 
 import lombok.Builder;
 import lombok.Data;
