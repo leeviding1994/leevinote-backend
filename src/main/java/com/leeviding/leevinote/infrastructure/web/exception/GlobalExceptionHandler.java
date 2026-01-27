@@ -87,6 +87,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Msg<?>> handleException(Exception e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Msg.failure(e.getMessage()));
     }
